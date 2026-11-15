@@ -1,0 +1,26 @@
+<!doctype html><html><body><canvas id=c width=3840 height=2160></canvas><script>
+(async()=>{
+  const out = {};
+  const cfgs = {
+    avcHigh52: { codec: 'avc1.640034', width: 3840, height: 2160, bitrate: 150e6, framerate: 60, hardwareAcceleration: 'prefer-hardware', avc: { format: 'annexb' }, latencyMode: 'quality', bitrateMode: 'variable' },
+    avcHigh52q: { codec: 'avc1.640034', width: 3840, height: 2160, framerate: 60, hardwareAcceleration: 'prefer-hardware', avc: { format: 'annexb' }, bitrateMode: 'quantizer' },
+    hevc: { codec: 'hvc1.1.6.L153.B0', width: 3840, height: 2160, bitrate: 150e6, framerate: 60, hardwareAcceleration: 'prefer-hardware', hevc: { format: 'annexb' } },
+  };
+  for (const [k, c] of Object.entries(cfgs)) { try { const r = await VideoEncoder.isConfigSupported(c); out[k] = r.supported; } catch (e) { out[k] = 'err ' + e.message; } }
+  // speed test
+  const cv = document.getElementById('c'); const gl = cv.getContext('webgl2', { preserveDrawingBuffer: true });
+  let bytes = 0, n = 0;
+  const enc = new VideoEncoder({ output: (chunk) => { bytes += chunk.byteLength; n++; }, error: e => out.encErr = e.message });
+  enc.configure(cfgs.avcHigh52);
+  const t0 = performance.now();
+  for (let i = 0; i < 60; i++) {
+    gl.clearColor(Math.random(), Math.random(), Math.random(), 1); gl.clear(gl.COLOR_BUFFER_BIT);
+    const f = new VideoFrame(cv, { timestamp: i * 16667, duration: 16667 });
+    enc.encode(f, { keyFrame: i % 60 === 0 }); f.close();
+    while (enc.encodeQueueSize > 4) await new Promise(r => setTimeout(r, 1));
+  }
+  await enc.flush();
+  out.sec = (performance.now() - t0) / 1000; out.chunks = n; out.bytes = bytes;
+  window.__wc = out;
+})();
+</script></body></html>

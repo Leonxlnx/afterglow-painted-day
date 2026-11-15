@@ -1,0 +1,10 @@
+import puppeteer from 'puppeteer-core';
+import fs from 'node:fs';
+import { startServer } from '../render/server.mjs';
+const server = await startServer({ port: 8796, onFrame: async (buf) => fs.writeFileSync('tests/wc2.h264', buf) });
+const browser = await puppeteer.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe', headless: 'new', args: ['--use-angle=d3d11', '--enable-gpu', '--ignore-gpu-blocklist'] });
+const page = await browser.newPage();
+await page.goto('http://localhost:8796/tests/wc2.html');
+await page.waitForFunction('window.__done || window.__err', { timeout: 120000 });
+console.log('err', await page.evaluate('window.__err'), 'md', await page.evaluate('window.__md'));
+await browser.close(); server.close(); process.exit(0);

@@ -1,0 +1,15 @@
+<!doctype html><html><body><canvas id=c width=3840 height=2160></canvas><script>
+const c=document.getElementById('c');const gl=c.getContext('webgl2',{antialias:false});
+const out={};
+out.renderer=gl.getParameter(gl.RENDERER);
+const dbg=gl.getExtension('WEBGL_debug_renderer_info'); if(dbg) out.unmasked=gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL);
+out.cbf=!!gl.getExtension('EXT_color_buffer_float');
+out.flb=!!gl.getExtension('OES_texture_float_linear');
+out.maxSamples=gl.getParameter(gl.MAX_SAMPLES);
+out.maxTex=gl.getParameter(gl.MAX_TEXTURE_SIZE);
+out.maxDrawBuffers=gl.getParameter(gl.MAX_DRAW_BUFFERS);
+out.samples32F=Array.from(gl.getInternalformatParameter(gl.RENDERBUFFER, gl.RGBA32F, gl.SAMPLES)||[]);
+out.samples16F=Array.from(gl.getInternalformatParameter(gl.RENDERBUFFER, gl.RGBA16F, gl.SAMPLES)||[]);
+out.samplesRG32F=Array.from(gl.getInternalformatParameter(gl.RENDERBUFFER, gl.RG32F, gl.SAMPLES)||[]);
+window.__cap=out;
+</script></body></html>

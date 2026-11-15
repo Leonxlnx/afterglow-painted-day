@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Afterglow — a painted day</title>
+<style>
+  :root { --ink: #fbf3ea; --veil: rgba(20, 14, 32, 0.38); }
+  html, body { margin: 0; height: 100%; background: #120e1c; overflow: hidden; }
+  canvas { display: block; width: 100%; height: 100%; image-rendering: auto; }
+  #ui { position: fixed; left: 16px; right: 16px; bottom: 16px; display: none; align-items: center; gap: 12px;
+        font: 500 13px/1 ui-sans-serif, system-ui, sans-serif; color: var(--ink); background: var(--veil);
+        backdrop-filter: blur(10px); padding: 10px 14px; border-radius: 12px; }
+  #ui button { background: none; border: 0; color: var(--ink); font-size: 15px; cursor: pointer; width: 26px; }
+  #ui input { flex: 1; accent-color: #ff8a52; }
+  #time { min-width: 44px; text-align: right; font-variant-numeric: tabular-nums; }
+  #loader { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+            background: radial-gradient(120% 90% at 50% 100%, #ff8a5a 0%, #b45a9c 38%, #3b3a8c 75%, #1c1c46 100%); color: var(--ink);
+            font: 400 15px/1.4 ui-serif, Georgia, serif; transition: opacity 1.2s ease; z-index: 5; }
+  #loader.done { opacity: 0; pointer-events: none; }
+  .ld-title { font-size: clamp(34px, 6vw, 64px); letter-spacing: 0.02em; font-style: italic; }
+  .ld-sub { opacity: 0.8; }
+  #status { margin-top: 18px; font: 500 12px/1 ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.75; }
+  body.still #loader { display: none; }
+  #enter { display: none; margin-top: 14px; padding: 12px 22px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.55);
+           background: rgba(255,255,255,0.12); color: var(--ink); font: 500 14px/1 ui-sans-serif, system-ui, sans-serif; cursor: pointer;
+           backdrop-filter: blur(6px); transition: background 0.2s ease, transform 0.2s ease; }
+  #enter:hover { background: rgba(255,255,255,0.24); transform: translateY(-1px); }
+</style>
+<script type="importmap">
+{ "imports": { "three": "./node_modules/three/build/three.module.js", "three/addons/": "./node_modules/three/examples/jsm/" } }
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="loader"><div class="ld-title">Afterglow</div><div class="ld-sub">a painted day, rendered live</div><div id="status">Mixing paint</div><button id="enter">Play with sound</button></div>
+<div id="ui"><button id="play" aria-label="Play or pause">❚❚</button><input id="bar" type="range" min="0" max="1000" value="0" aria-label="Timeline"><span id="time">0.0s</span></div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

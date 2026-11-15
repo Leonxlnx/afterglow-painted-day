@@ -1,0 +1,8 @@
+node_modules/
+out/
+deliver/
+audio/raw/
+tests/*.mp4
+tests/*.h264
+.claude/
+*.log
